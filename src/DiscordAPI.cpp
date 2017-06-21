@@ -206,9 +206,9 @@ void DiscordAPI::eventDispatcher(string name, json::value event) {
 			_bot->onGuildRoleDelete(event["guild_id"].as_string(),
 					event["role_id"].as_string());
 		else if(name == "GUILD_BAN_ADD")
-			_bot->onGuildBanAdd(event["guild_id"].as_string(), event);
+			_bot->onGuildBanAdd(event["guild_id"].as_string(), event["user"]);
 		else if(name == "GUILD_BAN_REMOVE")
-			_bot->onGuildBanRemove(event["guild_id"].as_string(), event);
+			_bot->onGuildBanRemove(event["guild_id"].as_string(), event["user"]);
 	}
 	catch(exception& e) {
 		cout << "Exception while processing event (" << name << ") : " << e.what() << endl;
