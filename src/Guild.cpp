@@ -42,9 +42,7 @@ Guild::Guild(json::value v) :
 			members.emplace_back(j);
 	}
 	if(v.has_field("channels")) {
-		for(json::value& j : v["channels"].as_array()) {
-			cout << j << endl;
+		for(json::value& j : v["channels"].as_array())
 			channels.emplace_back(j);
-		}
 	}
 }
