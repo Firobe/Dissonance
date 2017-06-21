@@ -112,14 +112,3 @@ json::value Embed::toJson() {
 bool Embed::empty() {
 	return title.empty();
 }
-
-Message::Message(string s) : content(s) {}
-Message::Message(Embed e) : embed(e) {}
-Message::Message(const char* s) : Message(string(s)) {}
-
-json::value Message::toJson() {
-	json::value r;
-	r["content"] = json::value(content);
-	if(!embed.empty()) r["embed"] = embed.toJson();
-	return r;
-}

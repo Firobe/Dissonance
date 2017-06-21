@@ -9,7 +9,7 @@
 #include <cpprest/ws_client.h>
 #include <cpprest/json.h>
 
-#include "Embed.hpp"
+#include "Message.hpp"
 
 using namespace utility;                    // Common utilities like std::string conversions
 using namespace web;                        // Common features like URIs.

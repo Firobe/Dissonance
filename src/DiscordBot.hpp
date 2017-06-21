@@ -11,7 +11,7 @@ public:
 	virtual void start(const std::string&);
 protected:
     DiscordAPI* api;
-    virtual void onMessageCreate(json::value message) = 0;
+    virtual void onMessageCreate(Message message) = 0;
     virtual void onMessageDelete(json::value message) = 0;
     virtual void onGuildCreate(json::value message) = 0;
 	virtual void onChannelCreate(json::value event) = 0;

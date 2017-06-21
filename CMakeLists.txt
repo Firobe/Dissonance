@@ -8,6 +8,9 @@ add_library(dissonance SHARED
 	src/DiscordAPI.cpp
 	src/DiscordBot.cpp
 	src/Embed.cpp
+	src/Message.cpp
+	src/User.cpp
+	src/Role.cpp
 	)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}")

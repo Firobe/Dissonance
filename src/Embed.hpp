@@ -1,7 +1,6 @@
 #ifndef EMBED_HPP
 #define EMBED_HPP
 
-#include <vector>
 #include <string>
 #include <cpprest/json.h>
 
@@ -67,16 +66,6 @@ struct Embed {
 	Embed(std::string, int = 0x80);
 	json::value toJson();
 	bool empty();
-};
-
-struct Message {
-	std::string content;
-	Embed embed;
-	Message() = default;
-	Message(std::string);
-	Message(const char*);
-	Message(Embed);
-	json::value toJson();
 };
 
 #endif
