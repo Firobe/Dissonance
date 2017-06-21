@@ -5,9 +5,9 @@ using namespace std;
 GuildMember::GuildMember(json::value v) :
 	user(v["user"])
 {
-	if(v.has_field("nick"))
+	if(v.has_field("nick") and !v["nick"].is_null())
 		nick = v["nick"].as_string();
-	if(v.has_field("jointed_at"))
+	if(v.has_field("joined_at"))
 		joined_at = v["joined_at"].as_string();
 	if(v.has_field("mute"))
 		mute = v["mute"].as_bool();
