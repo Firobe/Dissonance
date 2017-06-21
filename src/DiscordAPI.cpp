@@ -194,7 +194,8 @@ void DiscordAPI::eventDispatcher(string name, json::value event) {
 			_bot->onGuildMemberRemove(event["guild_id"].as_string(),
 				event["user"]);
 		else if(name == "GUILD_MEMBER_UPDATE")
-			_bot->onGuildMemberUpdate(event);
+			_bot->onGuildMemberUpdate(event["guild_id"].as_string(),
+					event);
 		else if(name == "GUILD_ROLE_CREATE")
 			_bot->onGuildRoleCreate(event["guild_id"].as_string(),
 					event["role"]);

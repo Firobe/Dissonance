@@ -21,7 +21,7 @@ protected:
 	virtual void onChannelDelete(Channel) = 0;
 	virtual void onGuildMemberAdd(std::string, GuildMember) = 0;
 	virtual void onGuildMemberRemove(std::string, GuildMember) = 0;
-	virtual void onGuildMemberUpdate(json::value event) = 0;
+	virtual void onGuildMemberUpdate(std::string, GuildMember) = 0;
 	virtual void onGuildRoleCreate(std::string, Role) = 0;
 	virtual void onGuildRoleUpdate(std::string, Role) = 0;
 	virtual void onGuildRoleDelete(std::string, std::string) = 0;
