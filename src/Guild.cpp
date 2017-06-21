@@ -1,4 +1,5 @@
 #include "Guild.hpp"
+#include <iostream>
 
 using namespace std;
 
@@ -36,10 +37,13 @@ Guild::Guild(json::value v) :
 		unavailable = v["unavailable"].as_bool();
 	if(v.has_field("member_count")) 
 		member_count = v["member_count"].as_integer();
-	if(v.has_field("members"))
+	if(v.has_field("members")) {
 		for(json::value& j : v["members"].as_array())
 			members.emplace_back(j);
-	if(v.has_field("channels"))
+	}
+	if(v.has_field("channels")) {
+		cout << v["channels"] << endl;
 		for(json::value& j : v["channels"].as_array())
 			channels.emplace_back(j);
+	}
 }
