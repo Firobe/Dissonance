@@ -13,19 +13,20 @@ public:
 	virtual void start(const std::string&);
 protected:
     DiscordAPI* api;
-    virtual void onMessageCreate(Message message) = 0;
-    virtual void onMessageDelete(Message message) = 0;
-    virtual void onGuildCreate(json::value message) = 0;
-	virtual void onChannelCreate(Channel) = 0;
-	virtual void onChannelUpdate(Channel) = 0;
-	virtual void onChannelDelete(Channel) = 0;
-	virtual void onGuildMemberAdd(std::string, GuildMember) = 0;
-	virtual void onGuildMemberRemove(std::string, GuildMember) = 0;
-	virtual void onGuildMemberUpdate(std::string, GuildMember) = 0;
-	virtual void onGuildRoleCreate(std::string, Role) = 0;
-	virtual void onGuildRoleUpdate(std::string, Role) = 0;
-	virtual void onGuildRoleDelete(std::string, std::string) = 0;
-	virtual void onGuildBanAdd(json::value event) = 0;
+    virtual void onMessageCreate(Message) {}
+    virtual void onMessageDelete(Message) {}
+    virtual void onGuildCreate(json::value) {}
+	virtual void onChannelCreate(Channel) {}
+	virtual void onChannelUpdate(Channel) {}
+	virtual void onChannelDelete(Channel) {}
+	virtual void onGuildMemberAdd(std::string, GuildMember) {}
+	virtual void onGuildMemberRemove(std::string, GuildMember) {}
+	virtual void onGuildMemberUpdate(std::string, GuildMember) {}
+	virtual void onGuildRoleCreate(std::string, Role) {}
+	virtual void onGuildRoleUpdate(std::string, Role) {}
+	virtual void onGuildRoleDelete(std::string, std::string) {}
+	virtual void onGuildBanAdd(std::string, User) {}
+	virtual void onGuildBanRemove(std::string, User) {}
 };
 
 #endif
