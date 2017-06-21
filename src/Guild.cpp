@@ -6,7 +6,6 @@ Guild::Guild(json::value v) :
 	id(v["id"].as_string()),
 	name(v["name"].as_string()),
 	icon(v["icon"].as_string()),
-	splash(v["splash"].as_string()),
 	owner_id(v["owner_id"].as_string()),
 	region(v["region"].as_string()),
 	afk_channel_id(v["afk_channel_id"].as_string()),
@@ -17,6 +16,8 @@ Guild::Guild(json::value v) :
 	default_message_notifications(v["default_message_notifications"]
 			.as_integer())
 {
+	if(v.has_field("splash") and !v["splash"].is_null())
+		splash = v["splash"].as_string();
 	for(json::value& j : v["roles"].as_array())
 		roles.emplace_back(j);
 	if(v.has_field("mfa_level"))
