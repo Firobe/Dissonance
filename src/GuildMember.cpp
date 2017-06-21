@@ -14,5 +14,5 @@ GuildMember::GuildMember(json::value v) :
 	if(v.has_field("dead"))
 		deaf = v["deaf"].as_bool();
 	for(json::value& r : v["roles"].as_array())
-		roles.emplace_back(r);
+		roles.push_back(r.as_string());
 }

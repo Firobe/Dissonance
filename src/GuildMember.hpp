@@ -13,7 +13,7 @@ using namespace web;
 struct GuildMember {
 	User user;
 	std::string nick;
-	std::vector<Role> roles;
+	std::vector<std::string> roles;
 	std::string joined_at;
 	bool mute;
 	bool deaf;
