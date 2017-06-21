@@ -1,6 +1,7 @@
 #ifndef BOT_HPP
 #define BOT_HPP
 
+#include "Guild.hpp"
 #include "DiscordAPI.hpp"
 #include "Channel.hpp"
 #include "GuildMember.hpp"
@@ -15,7 +16,7 @@ protected:
     DiscordAPI* api;
     virtual void onMessageCreate(Message) {}
     virtual void onMessageDelete(Message) {}
-    virtual void onGuildCreate(json::value) {}
+    virtual void onGuildCreate(Guild) {}
 	virtual void onChannelCreate(Channel) {}
 	virtual void onChannelUpdate(Channel) {}
 	virtual void onChannelDelete(Channel) {}
