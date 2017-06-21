@@ -3,9 +3,6 @@
 #include <string>
 #include <cpprest/json.h>
 
-#include "Embed.hpp"
-
-using namespace utility;
 using namespace web;
 
 struct User {

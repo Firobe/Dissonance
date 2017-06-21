@@ -2,6 +2,7 @@
 #define BOT_HPP
 
 #include "DiscordAPI.hpp"
+#include "Channel.hpp"
 
 class DiscordBot {
 	friend DiscordAPI;
@@ -14,9 +15,9 @@ protected:
     virtual void onMessageCreate(Message message) = 0;
     virtual void onMessageDelete(Message message) = 0;
     virtual void onGuildCreate(json::value message) = 0;
-	virtual void onChannelCreate(json::value event) = 0;
-	virtual void onChannelUpdate(json::value event) = 0;
-	virtual void onChannelDelete(json::value event) = 0;
+	virtual void onChannelCreate(Channel) = 0;
+	virtual void onChannelUpdate(Channel) = 0;
+	virtual void onChannelDelete(Channel) = 0;
 	virtual void onGuildMemberAdd(json::value event) = 0;
 	virtual void onGuildMemberRemove(json::value event) = 0;
 	virtual void onGuildMemberUpdate(json::value event) = 0;

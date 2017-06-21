@@ -8,7 +8,6 @@
 #include "Role.hpp"
 #include "User.hpp"
 
-using namespace utility;
 using namespace web;
 
 struct Message {
