@@ -1,4 +1,5 @@
 #ifndef ROLE_HPP
+#define ROLE_HPP
 
 #include <string>
 #include <cpprest/json.h>

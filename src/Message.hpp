@@ -1,4 +1,5 @@
 #ifndef MESSAGE_HPP
+#define MESSAGE_HPP
 
 #include <vector>
 #include <string>

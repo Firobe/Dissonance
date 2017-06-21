@@ -189,15 +189,18 @@ void DiscordAPI::eventDispatcher(string name, json::value event) {
 		else if(name == "CHANNEL_DELETE")
 			_bot->onChannelDelete(event);
 		else if(name == "GUILD_MEMBER_ADD")
-			_bot->onGuildMemberAdd(event);
+			_bot->onGuildMemberAdd(event["guild_id"].as_string(), event);
 		else if(name == "GUILD_MEMBER_REMOVE")
-			_bot->onGuildMemberRemove(event);
+			_bot->onGuildMemberRemove(event["guild_id"].as_string(),
+				event["user"]);
 		else if(name == "GUILD_MEMBER_UPDATE")
 			_bot->onGuildMemberUpdate(event);
 		else if(name == "GUILD_ROLE_CREATE")
-			_bot->onGuildRoleCreate(event["guild_id"].as_string(), event);
+			_bot->onGuildRoleCreate(event["guild_id"].as_string(),
+					event["role"]);
 		else if(name == "GUILD_ROLE_UPDATE")
-			_bot->onGuildRoleUpdate(event["guild_id"].as_string(), event);
+			_bot->onGuildRoleUpdate(event["guild_id"].as_string(),
+					event["role"]);
 		else if(name == "GUILD_ROLE_DELETE")
 			_bot->onGuildRoleDelete(event["guild_id"].as_string(),
 					event["role_id"].as_string());

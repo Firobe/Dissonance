@@ -3,6 +3,7 @@
 
 #include "DiscordAPI.hpp"
 #include "Channel.hpp"
+#include "GuildMember.hpp"
 
 class DiscordBot {
 	friend DiscordAPI;
@@ -18,8 +19,8 @@ protected:
 	virtual void onChannelCreate(Channel) = 0;
 	virtual void onChannelUpdate(Channel) = 0;
 	virtual void onChannelDelete(Channel) = 0;
-	virtual void onGuildMemberAdd(json::value event) = 0;
-	virtual void onGuildMemberRemove(json::value event) = 0;
+	virtual void onGuildMemberAdd(std::string, GuildMember) = 0;
+	virtual void onGuildMemberRemove(std::string, GuildMember) = 0;
 	virtual void onGuildMemberUpdate(json::value event) = 0;
 	virtual void onGuildRoleCreate(std::string, Role) = 0;
 	virtual void onGuildRoleUpdate(std::string, Role) = 0;

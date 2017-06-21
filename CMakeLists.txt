@@ -12,6 +12,7 @@ add_library(dissonance SHARED
 	src/User.cpp
 	src/Role.cpp
 	src/Channel.cpp
+	src/GuildMember.cpp
 	)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}")
@@ -42,6 +43,7 @@ install(FILES
 	src/User.hpp
 	src/Role.hpp
 	src/Message.hpp
+	src/Channel.hpp
 	DESTINATION /usr/include/dissonance/
 	)
 install(FILES src/Dissonance.hpp
