@@ -15,11 +15,15 @@ json::value Message::toJson() {
 
 Message::Message(json::value v) :
 	id(v["id"].as_string()),
-	channel_id(v["channel_id"].as_string()),
-	content(v["content"].as_string()),
-	timestamp(v["timestamp"].as_string()),
-	author(v["author"])
+	channel_id(v["channel_id"].as_string())
 {
+	if(v.has_field("content"))
+		content = v["content"].as_string();
+	if(v.has_field("timestamp"))
+		timestamp = v["timestamp"].as_string();
+	if(v.has_field("author"))
+		author = v["author"];
+
 	//TODO embed parsing
 	for(json::value& j : v["mentions"].as_array())
 		mentions.emplace_back(j);
