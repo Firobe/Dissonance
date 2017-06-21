@@ -1,16 +1,6 @@
 #include "Channel.hpp"
 
 using namespace std;
-/*
- *
-	std::string id;
-	std::string guild_id;
-	std::string name;
-	std::string type;
-	int position;
-	bool is_private;
-	std::string last_message_id;
-	*/
 
 Channel::Channel(json::value v) :
 	id(v["id"].as_string()),
@@ -21,7 +11,7 @@ Channel::Channel(json::value v) :
 {
 	if(v.has_field("is_private"))
 		is_private = v["is_private"].as_bool();
-	if(v.has_field("last_message_id"))
+	if(v.has_field("last_message_id") and !v["last_message_id"].is_null())
 		last_message_id = v["last_message_id"].as_string();
 }
 
