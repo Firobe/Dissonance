@@ -44,6 +44,7 @@ install(FILES
 	src/Role.hpp
 	src/Message.hpp
 	src/Channel.hpp
+	src/GuildMember.hpp
 	DESTINATION /usr/include/dissonance/
 	)
 install(FILES src/Dissonance.hpp
