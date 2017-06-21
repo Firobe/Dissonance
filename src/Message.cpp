@@ -1,4 +1,5 @@
 #include "Message.hpp"
+#include "Retrieve.hpp"
 
 using namespace std;
 
@@ -13,14 +14,12 @@ json::value Message::toJson() {
 	return r;
 }
 
-Message::Message(json::value v) :
-	id(v["id"].as_string()),
-	channel_id(v["channel_id"].as_string())
-{
-	if(v.has_field("content"))
-		content = v["content"].as_string();
-	if(v.has_field("timestamp"))
-		timestamp = v["timestamp"].as_string();
+Message::Message(json::value v) {
+	RETRIEVE(v, id, string);
+	RETRIEVE(v, channel_id, string);
+	RETRIEVE(v, content, string);
+	RETRIEVE(v, timestamp, string);
+
 	if(v.has_field("author"))
 		author = v["author"];
 

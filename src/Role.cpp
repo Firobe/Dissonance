@@ -1,12 +1,13 @@
 #include "Role.hpp"
+#include "Retrieve.hpp"
 
 using namespace std;
 
-Role::Role(json::value v) :
-	id(v["id"].as_string()),
-	name(v["name"].as_string()),
-	color(v["color"].as_integer()),
-	position(v["position"].as_integer()),
-	permissions(v["permissions"].as_integer()),
-	mentionable(v["mentionable"].as_bool())
-{}
+Role::Role(json::value v) {
+	RETRIEVE(v, id, string);
+	RETRIEVE(v, name, string);
+	RETRIEVE(v, color, integer);
+	RETRIEVE(v, position, integer);
+	RETRIEVE(v, permissions, integer);
+	RETRIEVE_BOOL(v, mentionable);
+}

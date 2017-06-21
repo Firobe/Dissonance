@@ -1,9 +1,10 @@
 #include "User.hpp"
+#include "Retrieve.hpp"
 
 using namespace std;
 
-User::User(json::value v) :
-	id(v["id"].as_string()),
-	username(v["username"].as_string()),
-	discriminator(v["discriminator"].as_string())
-{}
+User::User(json::value v) {
+	RETRIEVE(v, id, string);
+	RETRIEVE(v, username, string);
+	RETRIEVE(v, discriminator, string);
+}
