@@ -10,7 +10,6 @@ Guild::Guild(json::value v) :
 	region(v["region"].as_string()),
 	afk_channel_id(v["afk_channel_id"].as_string()),
 	afk_timeout(v["afk_timeout"].as_integer()),
-	embed_channel_id(v["embed_channel_id"].as_string()),
 	verification_level(v["verification_level"].as_integer()),
 	default_message_notifications(v["default_message_notifications"]
 			.as_integer())
@@ -19,6 +18,8 @@ Guild::Guild(json::value v) :
 		splash = v["splash"].as_string();
 	if(v.has_field("embed_enabled") and !v["embed_enabled"].is_null())
 		embed_enabled = v["embed_enabled"].as_bool();
+	if(v.has_field("embed_channel_id") and !v["embed_channel_id"].is_null())
+		embed_channel_id = v["embed_channel_id"].as_string();
 	for(json::value& j : v["roles"].as_array())
 		roles.emplace_back(j);
 	if(v.has_field("mfa_level"))
