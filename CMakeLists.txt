@@ -34,7 +34,13 @@ target_link_libraries(dissonance
 install(TARGETS dissonance
 	DESTINATION /usr/lib/
 	)
-install(FILES src/DiscordAPI.hpp src/DiscordBot.hpp src/Embed.hpp
+install(FILES
+	src/DiscordAPI.hpp
+	src/DiscordBot.hpp
+	src/Embed.hpp
+	src/User.hpp
+	src/Role.hpp
+	src/Message.hpp
 	DESTINATION /usr/include/dissonance/
 	)
 install(FILES src/Dissonance.hpp
