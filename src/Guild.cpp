@@ -17,8 +17,8 @@ Guild::Guild(json::value v) :
 	default_message_notifications(v["default_message_notifications"]
 			.as_integer())
 {
-	for(json::value& v : v["roles"].as_array())
-		roles.emplace_back(v);
+	for(json::value& j : v["roles"].as_array())
+		roles.emplace_back(j);
 	if(v.has_field("mfa_level"))
 		mfa_level = v["mfa_level"].as_integer();
 	if(v.has_field("joined_at"))
@@ -30,9 +30,9 @@ Guild::Guild(json::value v) :
 	if(v.has_field("member_count")) 
 		member_count = v["member_count"].as_integer();
 	if(v.has_field("members"))
-		for(json::value& v : v["members"].as_array())
-			members.emplace_back(v);
+		for(json::value& j : v["members"].as_array())
+			members.emplace_back(j);
 	if(v.has_field("channels"))
-		for(json::value& v : v["channels"].as_array())
-			channels.emplace_back(v);
+		for(json::value& j : v["channels"].as_array())
+			channels.emplace_back(j);
 }
