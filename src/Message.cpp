@@ -28,7 +28,7 @@ Message::Message(json::value v) :
 	if(v.has_field("mentions"))
 		for(json::value& j : v["mentions"].as_array())
 			mentions.emplace_back(j);
-	if(v.has_field("mention_roles")
+	if(v.has_field("mention_roles"))
 		for(json::value& j : v["mention_roles"].as_array())
 			mention_roles.emplace_back(j);
 }
