@@ -5,6 +5,7 @@ using namespace std;
 
 Guild::Guild(json::value v)
 {
+	RETRIEVE(v, id, string);
 	RETRIEVE(v, splash, string);
 	RETRIEVE(v, name, string);
 	RETRIEVE(v, icon, string);
