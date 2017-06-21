@@ -20,9 +20,9 @@ protected:
 	virtual void onGuildMemberAdd(json::value event) = 0;
 	virtual void onGuildMemberRemove(json::value event) = 0;
 	virtual void onGuildMemberUpdate(json::value event) = 0;
-	virtual void onGuildRoleCreate(json::value event) = 0;
-	virtual void onGuildRoleUpdate(json::value event) = 0;
-	virtual void onGuildRoleDelete(json::value event) = 0;
+	virtual void onGuildRoleCreate(std::string, Role) = 0;
+	virtual void onGuildRoleUpdate(std::string, Role) = 0;
+	virtual void onGuildRoleDelete(std::string, std::string) = 0;
 	virtual void onGuildBanAdd(json::value event) = 0;
 };
 
