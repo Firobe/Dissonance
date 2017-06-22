@@ -8,23 +8,23 @@ condition_variable cv;
 bool stop = false;
 
 http_response statusCheck(http_response r) {
-    if (r.status_code() == status_codes::BadRequest or
+	if (r.status_code() == status_codes::BadRequest or
 			r.status_code() == status_codes::Forbidden or
 			r.status_code() == status_codes::Unauthorized or
 			r.status_code() == status_codes::NotFound or
 			r.status_code() == status_codes::MethodNotAllowed or
 			r.status_code() == 429 or
 			r.status_code() >= 500)
-        throw runtime_error("Received status code " + to_string(r.status_code()));
+		throw runtime_error("Received status code " + to_string(r.status_code()));
 
-    return r;
+	return r;
 }
 
 DiscordAPI::DiscordAPI() :
-    _http_client("https://discordapp.com/api/"),
-	_bot(nullptr) {
-		_startTime = chrono::high_resolution_clock::now();
-}
+	_http_client("https://discordapp.com/api/"),
+		_bot(nullptr) {
+			_startTime = chrono::high_resolution_clock::now();
+		}
 
 DiscordAPI::~DiscordAPI() {
 	cerr << "Destructor appelé !" << endl;
@@ -46,15 +46,15 @@ void DiscordAPI::connect(DiscordBot* bot, string token) {
 	_resuming = (_bot != nullptr);
 	_bot = bot;
 	_token = token;
-    cout << "DISCORD++ INIT\n============================================" << endl;
-    //GET endpoint
-    _wsEndpoint = httpRequest(methods::GET, "/gateway")["url"].as_string();
-    cout << "Getting gateway endpoint..." << endl;
-    cout << "Gateway endpoint : " << _wsEndpoint << endl;
-    //Connection
-    uri_builder builder(_wsEndpoint);
-    builder.append_query("v", 5);
-    builder.append_query("encoding", "json");
+	cout << "DISCORD++ INIT\n============================================" << endl;
+	//GET endpoint
+	_wsEndpoint = httpRequest(methods::GET, "/gateway")["url"].as_string();
+	cout << "Getting gateway endpoint..." << endl;
+	cout << "Gateway endpoint : " << _wsEndpoint << endl;
+	//Connection
+	uri_builder builder(_wsEndpoint);
+	builder.append_query("v", 5);
+	builder.append_query("encoding", "json");
 	_web_client.set_message_handler(bind(&DiscordAPI::receiveAndDispatch, this, placeholders::_1));
 
 	//Close manager
@@ -66,18 +66,18 @@ void DiscordAPI::connect(DiscordBot* bot, string token) {
 			cv.notify_all();
 			});
 
-    cout << "Connecting to Gateway... " << endl;
-    _web_client.connect(builder.to_string()).wait();
-    cout << "Connection OK" << endl;
+	cout << "Connecting to Gateway... " << endl;
+	_web_client.connect(builder.to_string()).wait();
+	cout << "Connection OK" << endl;
 }
 
 void DiscordAPI::helloHandler(json::value& hello) {
-    //Hello
-    if (hello["op"].as_integer() != 10)
-        throw runtime_error("Bad Hello");
+	//Hello
+	if (hello["op"].as_integer() != 10)
+		throw runtime_error("Bad Hello");
 
-    _heartbeat = hello["d"]["heartbeat_interval"].as_integer();
-    cout << "Hello ! Hearbeat = " << _heartbeat << " ms" << endl;
+	_heartbeat = hello["d"]["heartbeat_interval"].as_integer();
+	cout << "Hello ! Hearbeat = " << _heartbeat << " ms" << endl;
 	if(!_resuming){
 		_initPhase = 1;
 		//Identify
@@ -113,62 +113,62 @@ void DiscordAPI::finalHandler() {
 	json::value payload = json::value::parse("{\"game\":{\"name\":\"dormir...\"},\"idle_since\":null}");
 	sendJson(gatewayPayload(payload, 3));
 
-    cout << "Success !\n============================================" << endl;
-    _keepAliveTask = thread(&DiscordAPI::keepAlive, this);
-    cout << "Now listening..." << endl;
+	cout << "Success !\n============================================" << endl;
+	_keepAliveTask = thread(&DiscordAPI::keepAlive, this);
+	cout << "Now listening..." << endl;
 	_keepAliveTask.detach();
 }
 
 void DiscordAPI::keepAlive() {
 	unique_lock<mutex> lck(mtx);
-    try {
-        while (!stop) {
-            if (_dead)
-                throw runtime_error("DEAD CONNECTION");
+	try {
+		while (!stop) {
+			if (_dead)
+				throw runtime_error("DEAD CONNECTION");
 
-            json::value d(_seq);
-            sendJson(gatewayPayload(d, 1));
-            _dead = true;
+			json::value d(_seq);
+			sendJson(gatewayPayload(d, 1));
+			_dead = true;
 			cv.wait_for(lck, chrono::milliseconds(_heartbeat));
-        }
-    }
-    catch (exception& e) {
-        cout << "Exception keepAlive : " << e.what() << endl;
+		}
+	}
+	catch (exception& e) {
+		cout << "Exception keepAlive : " << e.what() << endl;
 		stop = true;
 		cv.notify_all();
-    }
+	}
 	cerr << "End of keepAlive !" << endl;
 }
 
 void DiscordAPI::receiveAndDispatch(const websocket_incoming_message& msg) {
 	try {
-	json::value received = json::value::parse(msg.extract_string().get());
-	if(_initPhase == 0)
-		helloHandler(received);
-	else if(_initPhase == 1)
-		readyHandler(received);
-	else {
-		switch (received["op"].as_integer()) {
-		case 0:
-			_seq = received["s"].as_integer();
-			eventDispatcher(received["t"].as_string(), received["d"]);
-			break;
+		json::value received = json::value::parse(msg.extract_string().get());
+		if(_initPhase == 0)
+			helloHandler(received);
+		else if(_initPhase == 1)
+			readyHandler(received);
+		else {
+			switch (received["op"].as_integer()) {
+				case 0:
+					_seq = received["s"].as_integer();
+					eventDispatcher(received["t"].as_string(), received["d"]);
+					break;
 
-		case 3:
-			cout << "Status update" << endl;
-			break;
+				case 3:
+					cout << "Status update" << endl;
+					break;
 
-		case 11:
-			_dead = false;
-			break;
+				case 11:
+					_dead = false;
+					break;
 
-		default:
-			cout << "Received unprocessed message " << received.serialize() << endl;
-			cout << "OP was " << received["op"].as_integer() << endl;
+				default:
+					cout << "Received unprocessed message " << received.serialize() << endl;
+					cout << "OP was " << received["op"].as_integer() << endl;
+			}
 		}
-	}
 	} catch(exception& e) {
-        cout << "Exception receiveAndDispatch : " << e.what() << endl;
+		cout << "Exception receiveAndDispatch : " << e.what() << endl;
 		stop = true;
 		cv.notify_all();
 	}
@@ -192,7 +192,7 @@ void DiscordAPI::eventDispatcher(string name, json::value event) {
 			_bot->onGuildMemberAdd(event["guild_id"].as_string(), event);
 		else if(name == "GUILD_MEMBER_REMOVE")
 			_bot->onGuildMemberRemove(event["guild_id"].as_string(),
-				event["user"]);
+					event["user"]);
 		else if(name == "GUILD_MEMBER_UPDATE")
 			_bot->onGuildMemberUpdate(event["guild_id"].as_string(),
 					event);
@@ -217,26 +217,26 @@ void DiscordAPI::eventDispatcher(string name, json::value event) {
 }
 
 json::value DiscordAPI::identifyValue() {
-    json::value properties;
-    properties["os"] = json::value("linux");
-    properties["device"] = json::value("Dissonance");
-    json::value d;
-    d["token"] = json::value(_token);
-    d["properties"] = properties;
-    d["compress"] = json::value(false);
-    d["large_threshold"] = json::value(250);
-    return d;
+	json::value properties;
+	properties["os"] = json::value("linux");
+	properties["device"] = json::value("Dissonance");
+	json::value d;
+	d["token"] = json::value(_token);
+	d["properties"] = properties;
+	d["compress"] = json::value(false);
+	d["large_threshold"] = json::value(250);
+	return d;
 }
 
 json::value DiscordAPI::gatewayPayload(json::value d, int opcode) {
-    json::value m;
-    m["op"] = json::value(opcode);
-    m["d"] = d;
-    return m;
+	json::value m;
+	m["op"] = json::value(opcode);
+	m["d"] = d;
+	return m;
 }
 
 const json::value& DiscordAPI::getUser() {
-    return _user;
+	return _user;
 }
 
 chrono::minutes DiscordAPI::upTime() {
@@ -244,17 +244,17 @@ chrono::minutes DiscordAPI::upTime() {
 }
 
 void DiscordAPI::sendJson(json::value v) {
-    string s(v.serialize());
-    websocket_outgoing_message msg;
-    msg.set_utf8_message(s);
-    _web_client.send(msg).wait();
+	string s(v.serialize());
+	websocket_outgoing_message msg;
+	msg.set_utf8_message(s);
+	_web_client.send(msg).wait();
 }
 
 json::value DiscordAPI::httpRequest(const method& method, string endpoint, json::value body) {
-    http_request request(method);
-    request.set_request_uri(endpoint);
-    request.headers().add("Authorization", "Bot " + _token);
-    request.headers().add("User-Agent", "DiscordBot (Sakamoto, 6.9)");
+	http_request request(method);
+	request.set_request_uri(endpoint);
+	request.headers().add("Authorization", "Bot " + _token);
+	request.headers().add("User-Agent", "DiscordBot (Sakamoto, 6.9)");
 	if(method != methods::GET) {
 		request.headers().add("Content-Length", body.serialize().size());
 		request.set_body(body);
@@ -274,11 +274,11 @@ json::value DiscordAPI::httpRequest(const method& method, string endpoint, json:
 			this_thread::sleep_for(chrono::seconds(toSleep));
 		}
 	}
-	
+
 
 	if(response.status_code() == status_codes::OK){
 		try{
-		return response.extract_json().get();
+			return response.extract_json().get();
 		}catch(...){ return json::value("NULL"); }
 	}
 	else return json::value("NULL");
@@ -290,9 +290,9 @@ json::value DiscordAPI::httpRequest(const method& method, string endpoint, json:
 
 
 void DiscordAPI::sendMessage(Message me, string channel) {
-    json::value m = me.toJson();
+	json::value m = me.toJson();
 	try{
-    httpRequest(methods::POST, "/channels/" + channel + "/messages", m);
+		httpRequest(methods::POST, "/channels/" + channel + "/messages", m);
 	}catch(exception& e){ cerr << "Sending message : " << e.what() << endl;}
 }
 

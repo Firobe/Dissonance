@@ -6,7 +6,8 @@ Image::Image(string url, string pr, int w, int h) :
 	url(url),
 	proxy_url(pr),
 	width(w),
-	height(h) {}
+	height(h) {
+}
 
 json::value Image::toJson() {
 	json::value r;
