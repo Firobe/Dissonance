@@ -212,7 +212,7 @@ void DiscordAPI::eventDispatcher(string name, json::value event) {
 	}
 	catch(exception& e) {
 		cout << "Exception while processing event (" << name << ") : " << e.what() << endl;
-		throw e;
+		//throw e;
 	}
 }
 
