@@ -21,7 +21,7 @@ protected:
 	virtual void onChannelUpdate(Channel) {}
 	virtual void onChannelDelete(Channel) {}
 	virtual void onGuildMemberAdd(std::string, GuildMember) {}
-	virtual void onGuildMemberRemove(std::string, GuildMember) {}
+	virtual void onGuildMemberRemove(std::string, User) {}
 	virtual void onGuildMemberUpdate(std::string, GuildMember) {}
 	virtual void onGuildRoleCreate(std::string, Role) {}
 	virtual void onGuildRoleUpdate(std::string, Role) {}
