@@ -34,12 +34,13 @@ void DiscordAPI::wait() {
 	unique_lock<mutex> lck(mtx);
 	while(!stop) cv.wait(lck);
 	cerr << "API IS STOPPING !" << endl;
-	_web_client.close(websocket_close_status::going_away, "Manual close").wait();
+	if(_closed) _web_client.close(websocket_close_status::going_away, "Manual close").wait();
 	cerr << "API IS STOPPED !" << endl;
 }
 
 void DiscordAPI::connect(DiscordBot* bot, string token) {
 	stop = false;
+	_closed = false;
 	_dead = false;
 	_initPhase = 0;
 	_web_client = websocket_callback_client();
@@ -58,11 +59,12 @@ void DiscordAPI::connect(DiscordBot* bot, string token) {
 	_web_client.set_message_handler(bind(&DiscordAPI::receiveAndDispatch, this, placeholders::_1));
 
 	//Close manager
-	_web_client.set_close_handler([](websocket_close_status closeStatus, string reason, error_code err) {
+	_web_client.set_close_handler([this](websocket_close_status closeStatus, string reason, error_code err) {
 			cerr << "CONNECTION WAS CLOSED : " << reason << endl;
 			cerr << "CLOSE STATUS : " << (unsigned) closeStatus << endl;
 			cerr << "ERROR_CODE " << err << endl;
 			stop = true;
+			_closed = true;
 			cv.notify_all();
 			});
 

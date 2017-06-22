@@ -38,6 +38,8 @@ class DiscordAPI {
     json::value _user;
     DiscordBot* _bot;
 	std::chrono::high_resolution_clock::time_point _startTime;
+
+	bool _closed;
 public:
     void connect(DiscordBot* bot, std::string token);
 	void wait();
