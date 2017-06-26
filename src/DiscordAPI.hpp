@@ -44,7 +44,6 @@ public:
     void connect(DiscordBot* bot, std::string token);
 	void wait();
 	DiscordAPI();
-	~DiscordAPI();
     //INTERNAL
 private:
 	void helloHandler(json::value& ready);

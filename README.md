@@ -1,6 +1,6 @@
 # Dissonance
-This library provides a simple way to setup a Discord Bot in C++. It implements a subset of the Discord API (see "Development state"). It is provided as a shared library for Linux.
-This library depends on [cppRest](https://github.com/Microsoft/cpprestsdk).
+This library provides a simple way to setup a Discord Bot in C++. It implements a subset of the Discord API (see "Development state"). It is provided as a shared library for Linux.  
+This library depends on [cpprest](https://github.com/Microsoft/cpprestsdk).  
 Only Linux is supported at the moment.
 
 # Installation

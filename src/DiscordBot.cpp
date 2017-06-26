@@ -26,7 +26,7 @@ void DiscordBot::start(const std::string& token) {
 			cerr << "Retrials are too close !! COMPLETELY EXITING !!" << endl;
 			return;
 		}
-		cerr << "Waiting for retrial" << endl;
+		cerr << "Will try to resume connection !" << endl;
 		sleep(3);
 		lastRetry = time(nullptr);
 	}

@@ -26,16 +26,11 @@ DiscordAPI::DiscordAPI() :
 			_startTime = chrono::high_resolution_clock::now();
 		}
 
-DiscordAPI::~DiscordAPI() {
-	cerr << "Destructor appelé !" << endl;
-}
-
 void DiscordAPI::wait() {
 	unique_lock<mutex> lck(mtx);
 	while(!stop) cv.wait(lck);
-	cerr << "API IS STOPPING !" << endl;
 	if(_closed) _web_client.close(websocket_close_status::going_away, "Manual close").wait();
-	cerr << "API IS STOPPED !" << endl;
+	cerr << "Connection closed !" << endl;
 }
 
 void DiscordAPI::connect(DiscordBot* bot, string token) {
@@ -47,7 +42,7 @@ void DiscordAPI::connect(DiscordBot* bot, string token) {
 	_resuming = (_bot != nullptr);
 	_bot = bot;
 	_token = token;
-	cout << "DISCORD++ INIT\n============================================" << endl;
+	cout << "DISSONANCE\n============================================" << endl;
 	//GET endpoint
 	_wsEndpoint = httpRequest(methods::GET, "/gateway")["url"].as_string();
 	cout << "Getting gateway endpoint..." << endl;
@@ -59,10 +54,8 @@ void DiscordAPI::connect(DiscordBot* bot, string token) {
 	_web_client.set_message_handler(bind(&DiscordAPI::receiveAndDispatch, this, placeholders::_1));
 
 	//Close manager
-	_web_client.set_close_handler([this](websocket_close_status closeStatus, string reason, error_code err) {
-			cerr << "CONNECTION WAS CLOSED : " << reason << endl;
-			cerr << "CLOSE STATUS : " << (unsigned) closeStatus << endl;
-			cerr << "ERROR_CODE " << err << endl;
+	_web_client.set_close_handler([this](websocket_close_status closeStatus, string, error_code) {
+			cerr << "Connection closed by Discord : " << reason << endl;
 			stop = true;
 			_closed = true;
 			cv.notify_all();
@@ -111,7 +104,7 @@ void DiscordAPI::readyHandler(json::value& ready){
 }
 
 void DiscordAPI::finalHandler() {
-	cout << "Okay !\nSending cool presence message...";
+	cout << "Okay !\nSending presence message...";
 	json::value payload = json::value::parse("{\"game\":{\"name\":\"dormir...\"},\"idle_since\":null}");
 	sendJson(gatewayPayload(payload, 3));
 
@@ -135,11 +128,10 @@ void DiscordAPI::keepAlive() {
 		}
 	}
 	catch (exception& e) {
-		cout << "Exception keepAlive : " << e.what() << endl;
+		cout << "KeepAlive : " << e.what() << endl;
 		stop = true;
 		cv.notify_all();
 	}
-	cerr << "End of keepAlive !" << endl;
 }
 
 void DiscordAPI::receiveAndDispatch(const websocket_incoming_message& msg) {
@@ -170,7 +162,7 @@ void DiscordAPI::receiveAndDispatch(const websocket_incoming_message& msg) {
 			}
 		}
 	} catch(exception& e) {
-		cout << "Exception receiveAndDispatch : " << e.what() << endl;
+		cout << "receiveAndDispatch : " << e.what() << endl;
 		stop = true;
 		cv.notify_all();
 	}
