@@ -1,5 +1,5 @@
-#ifndef BOT_HPP
-#define BOT_HPP
+#ifndef DISCORDBOT_HPP
+#define DISCORDBOT_HPP
 
 #include "Guild.hpp"
 #include "DiscordAPI.hpp"

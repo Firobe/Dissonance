@@ -1,5 +1,5 @@
-#ifndef API_HPP
-#define API_HPP
+#ifndef DISCORDAPI_HPP
+#define DISCORDAPI_HPP
 
 #include <thread>
 #include <string>
