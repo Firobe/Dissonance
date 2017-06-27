@@ -14,6 +14,7 @@ add_library(dissonance SHARED
 	src/Channel.cpp
 	src/GuildMember.cpp
 	src/Guild.cpp
+	src/RateLimiter.cpp
 	)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}")

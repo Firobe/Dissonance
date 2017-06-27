@@ -10,6 +10,7 @@
 #include <cpprest/json.h>
 
 #include "Message.hpp"
+#include "RateLimiter.hpp"
 
 using namespace utility;
 using namespace web;
@@ -37,8 +38,8 @@ class DiscordAPI {
     json::value _user;
     DiscordBot* _bot;
 	std::chrono::high_resolution_clock::time_point _startTime;
-
 	bool _closed;
+	RateLimiter rateLimiter;
 public:
     void connect(DiscordBot* bot, std::string token);
 	void wait();
