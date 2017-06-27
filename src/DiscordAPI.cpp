@@ -7,16 +7,11 @@ mutex mtx;
 condition_variable cv;
 bool stop = false;
 
-http_response statusCheck(http_response r) {
-	if (r.status_code() == status_codes::BadRequest or
-			r.status_code() == status_codes::Forbidden or
-			r.status_code() == status_codes::Unauthorized or
-			r.status_code() == status_codes::NotFound or
-			r.status_code() == status_codes::MethodNotAllowed or
-			r.status_code() == 429 or
-			r.status_code() >= 500)
-		throw runtime_error("Received status code " + to_string(r.status_code()));
-
+const http_response& statusCheck(const http_response& r, status_code expected, string name) {
+	if (r.status_code() != expected)
+		throw runtime_error("ERROR : " + name + " received status code " +
+				to_string(r.status_code()) + "instead of " +
+				to_string(expected));
 	return r;
 }
 
@@ -44,7 +39,10 @@ void DiscordAPI::connect(DiscordBot* bot, string token) {
 	_token = token;
 	cout << "DISSONANCE\n============================================" << endl;
 	//GET endpoint
-	_wsEndpoint = httpRequest(methods::GET, "/gateway")["url"].as_string();
+	http_response endResp = statusCheck(
+			httpRequest(methods::GET, "/gateway"),
+			status_codes::OK, "Get Gateway");
+	_wsEndpoint = endResp.extract_json().get()["url"].as_string();
 	cout << "Getting gateway endpoint..." << endl;
 	cout << "Gateway endpoint : " << _wsEndpoint << endl;
 	//Connection
@@ -54,7 +52,7 @@ void DiscordAPI::connect(DiscordBot* bot, string token) {
 	_web_client.set_message_handler(bind(&DiscordAPI::receiveAndDispatch, this, placeholders::_1));
 
 	//Close manager
-	_web_client.set_close_handler([this](websocket_close_status closeStatus, string, error_code) {
+	_web_client.set_close_handler([this](websocket_close_status, string reason, error_code) {
 			cerr << "Connection closed by Discord : " << reason << endl;
 			stop = true;
 			_closed = true;
@@ -244,7 +242,7 @@ void DiscordAPI::sendJson(json::value v) {
 	_web_client.send(msg).wait();
 }
 
-json::value DiscordAPI::httpRequest(const method& method, string endpoint, json::value body) {
+http_response DiscordAPI::httpRequest(const method& method, string endpoint, json::value body) {
 	http_request request(method);
 	request.set_request_uri(endpoint);
 	request.headers().add("Authorization", "Bot " + _token);
@@ -254,7 +252,6 @@ json::value DiscordAPI::httpRequest(const method& method, string endpoint, json:
 		request.set_body(body);
 	}
 	http_response response = _http_client.request(request).get();
-	statusCheck(response);
 	http_headers headers = response.headers();
 
 	//TODO SMARTER RATE LIMITING
@@ -268,14 +265,7 @@ json::value DiscordAPI::httpRequest(const method& method, string endpoint, json:
 			this_thread::sleep_for(chrono::seconds(toSleep));
 		}
 	}
-
-
-	if(response.status_code() == status_codes::OK){
-		try{
-			return response.extract_json().get();
-		}catch(...){ return json::value("NULL"); }
-	}
-	else return json::value("NULL");
+	return response;
 }
 
 /******************************************************
@@ -285,50 +275,58 @@ json::value DiscordAPI::httpRequest(const method& method, string endpoint, json:
 
 void DiscordAPI::sendMessage(Message me, string channel) {
 	json::value m = me.toJson();
-	try{
-		httpRequest(methods::POST, "/channels/" + channel + "/messages", m);
-	}catch(exception& e){ cerr << "Sending message : " << e.what() << endl;}
+	http_response r = httpRequest(methods::POST, "/channels/" + channel + "/messages", m);
+	statusCheck(r, status_codes::OK, "sendMessage");
 }
 
 void DiscordAPI::deleteMessage(string channelId, string messageId) {
-	httpRequest(methods::DEL, "/channels/" + channelId + "/messages/" + messageId);
+	http_response r = httpRequest(methods::DEL, "/channels/" + channelId + "/messages/" + messageId);
+	statusCheck(r, status_codes::NoContent, "deleteMessage");
 }
 
 void DiscordAPI::bulkDeleteMessages(string channelId, vector<string>& messageIds) {
-	json::value payload;
-	json::value arr;
+	json::value arr, payload;
 	for(unsigned i = 0 ; i < messageIds.size() ; ++i)
 		arr[i] = json::value(messageIds[i]);
 	payload["messages"] = arr;
-	httpRequest(methods::POST, "/channels/" + channelId + "/messages/bulk-delete", payload);
+	http_response r = httpRequest(methods::POST, "/channels/" + channelId + "/messages/bulk-delete", payload);
+	statusCheck(r, status_codes::NoContent, "bulkDeleteMessage");
 }
 
 void DiscordAPI::addGuildMemberRole(string guildId, string userId, string roleId) {
-	httpRequest(methods::PUT, "/guilds/" + guildId + "/members/" + userId
+	http_response r = httpRequest(methods::PUT, "/guilds/" + guildId + "/members/" + userId
 			+ "/roles/" + roleId);
+	statusCheck(r, status_codes::NoContent, "addGuildMemberRole");
 }
 
 void DiscordAPI::removeGuildMemberRole(string guildId, string userId, string roleId) {
-	httpRequest(methods::DEL, "/guilds/" + guildId + "/members/" + userId
+	http_response r = httpRequest(methods::DEL, "/guilds/" + guildId + "/members/" + userId
 			+ "/roles/" + roleId);
+	statusCheck(r, status_codes::NoContent, "removeGuildMemberRole");
 }
 
 void DiscordAPI::removeGuildMember(string guildId, string userId) {
-	httpRequest(methods::DEL, "/guilds/" + guildId + "/members/" + userId);
+	http_response r = httpRequest(methods::DEL, "/guilds/" + guildId + "/members/" + userId);
+	statusCheck(r, status_codes::NoContent, "removeGuildMember");
 }
 
 void DiscordAPI::createGuildBan(string guildId, string userId) {
-	httpRequest(methods::PUT, "/guilds/" + guildId + "/bans/" + userId);
+	http_response r = httpRequest(methods::PUT, "/guilds/" + guildId + "/bans/" + userId);
+	statusCheck(r, status_codes::NoContent, "createGuildBan");
 }
 
 void DiscordAPI::removeGuildBan(string guildId, string userId) {
-	httpRequest(methods::DEL, "/guilds/" + guildId + "/bans/" + userId);
+	http_response r = httpRequest(methods::DEL, "/guilds/" + guildId + "/bans/" + userId);
+	statusCheck(r, status_codes::NoContent, "removeGuildBan");
 }
 
 json::value DiscordAPI::getChannelMessage(string channelId, string messageId) {
-	return httpRequest(methods::GET, "/channels/" + channelId + "/messages/" + messageId);
+	http_response r = httpRequest(methods::GET, "/channels/" + channelId + "/messages/" + messageId);
+	statusCheck(r, status_codes::OK, "");
+	return r.extract_json().get();
 }
 
 void DiscordAPI::triggerTyping(string channelId) {
-	httpRequest(methods::POST, "/channels/" + channelId + "/typing");
+	http_response r = httpRequest(methods::POST, "/channels/" + channelId + "/typing");
+	statusCheck(r, status_codes::NoContent, "triggerTyping");
 }

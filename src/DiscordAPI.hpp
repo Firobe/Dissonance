@@ -11,16 +11,15 @@
 
 #include "Message.hpp"
 
-using namespace utility;                    // Common utilities like std::string conversions
-using namespace web;                        // Common features like URIs.
-using namespace web::http;                  // Common HTTP functionality
-using namespace web::http::client;          // HTTP client features
-using namespace web::websockets::client;    // Websocket client
-
+using namespace utility;
+using namespace web;
+using namespace web::http;
+using namespace web::http::client;
+using namespace web::websockets::client;
 
 class DiscordBot;
 
-http_response statusCheck(http_response);
+const http_response& statusCheck(const http_response&, status_code, std::string);
 
 class DiscordAPI {
     std::string _token;
@@ -56,7 +55,7 @@ private:
     void receiveAndDispatch(const websocket_incoming_message&);
 
     void sendJson(json::value v);
-    json::value httpRequest(const method& method, std::string endpoint, json::value body = json::value());
+    http_response httpRequest(const method& method, std::string endpoint, json::value body = json::value());
     //PUBLIC API
 public:
 	//Channel
