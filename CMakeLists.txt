@@ -48,6 +48,7 @@ install(FILES
 	src/Channel.hpp
 	src/GuildMember.hpp
 	src/Guild.hpp
+	src/RateLimiter.hpp
 	DESTINATION /usr/include/dissonance/
 	)
 install(FILES src/Dissonance.hpp
