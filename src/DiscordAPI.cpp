@@ -10,7 +10,7 @@ bool stop = false;
 const http_response& statusCheck(const http_response& r, status_code expected, string name) {
 	if (r.status_code() != expected)
 		throw runtime_error("ERROR : " + name + " received status code " +
-				to_string(r.status_code()) + "instead of " +
+				to_string(r.status_code()) + " instead of " +
 				to_string(expected));
 	return r;
 }
