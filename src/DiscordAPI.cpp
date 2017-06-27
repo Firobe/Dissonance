@@ -54,7 +54,7 @@ void DiscordAPI::connect(DiscordBot* bot, string token) {
 	_web_client.set_message_handler(bind(&DiscordAPI::receiveAndDispatch, this, placeholders::_1));
 
 	//Close manager
-	_web_client.set_close_handler([this](websocket_close_status closeStatus, string, error_code) {
+	_web_client.set_close_handler([this](websocket_close_status, string reason, error_code) {
 			cerr << "Connection closed by Discord : " << reason << endl;
 			stop = true;
 			_closed = true;
