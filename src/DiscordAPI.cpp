@@ -355,8 +355,11 @@ vector<DMChannel> DiscordAPI::getUserDMs() {
 	statusCheck(r, status_codes::OK, "getUserDMs");
 	rateLimiter.report(endpoint, r.headers());
 	vector<DMChannel> res;
-	for(json::value& v : r.extract_json().get().as_array())
-		res.emplace_back(v);
+	json::value v = r.extract_json().get();
+	if(!v.is_array())
+		throw runtime_error("getUserDMs : returned is not an array !");
+	for(json::value& j : v.as_array())
+		res.emplace_back(j);
 	return res;
 }
 

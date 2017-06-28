@@ -9,7 +9,11 @@ RateLimit::RateLimit(http_headers headers) {
 		remainingCalls = stoi(headers["X-RateLimit-Remaining"]);
 		resetDate = stoul(headers["X-RateLimit-Reset"]);
 	}
-	else throw runtime_error("Response does not have rate limiting headers");
+	else {
+		cerr << "Response does not have rate limiting headers" << endl;
+		remainingCalls = 999;
+		resetDate = 0;
+	}
 }
 
 RateLimit::RateLimit(int a, int b) :
