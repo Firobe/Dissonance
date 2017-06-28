@@ -373,9 +373,9 @@ DMChannel DiscordAPI::createDM(string recipientId) {
 
 User DiscordAPI::getUser(string userId) {
 	string endpoint = "users";
-	rateLimiter.ask(endpoint);
+	//rateLimiter.ask(endpoint);
 	http_response r = httpRequest(methods::GET, endpoint + "/" + userId);
 	statusCheck(r, status_codes::OK, "getUser");
-	rateLimiter.report(endpoint, r.headers());
+	//rateLimiter.report(endpoint, r.headers());
 	return r.extract_json().get();
 }
