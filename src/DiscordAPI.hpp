@@ -37,7 +37,7 @@ class DiscordAPI {
 	std::thread _keepAliveTask;
 	std::thread _listener;
     bool _dead;
-    json::value _user;
+    User _user;
     DiscordBot* _bot;
 	std::chrono::high_resolution_clock::time_point _startTime;
 	bool _closed;
@@ -77,7 +77,7 @@ public:
 	DMChannel createDM(std::string);
 	User getUser(std::string);
 
-    const json::value& getUser();
+    User getUser();
 	std::chrono::minutes upTime();
 };
 

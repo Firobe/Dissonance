@@ -227,7 +227,7 @@ json::value DiscordAPI::gatewayPayload(json::value d, int opcode) {
 	return m;
 }
 
-const json::value& DiscordAPI::getUser() {
+User DiscordAPI::getUser() {
 	return _user;
 }
 
