@@ -8,10 +8,16 @@ condition_variable cv;
 bool stop = false;
 
 const http_response& statusCheck(const http_response& r, status_code expected, string name) {
-	if (r.status_code() != expected)
+	if (r.status_code() != expected) {
+		string re = "No more information.";
+		try {
+			json::value j = r.extract_json().get();
+			re = j.at("message").as_string();
+		}catch(...){}
 		throw runtime_error("ERROR : " + name + " received status code " +
 				to_string(r.status_code()) + " instead of " +
-				to_string(expected));
+				to_string(expected) + "\n" + re);
+	}
 	return r;
 }
 
