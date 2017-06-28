@@ -82,7 +82,7 @@ json::value Field::toJson() {
 	json::value r;
 	r["name"] = json::value(name);
 	r["value"] = json::value(value);
-	r["Inline"] = json::value(Inline);
+	r["inline"] = json::value(Inline);
 	return r;
 }
 
