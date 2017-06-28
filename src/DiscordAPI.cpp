@@ -24,8 +24,8 @@ DiscordAPI::DiscordAPI() :
 void DiscordAPI::wait() {
 	unique_lock<mutex> lck(mtx);
 	while(!stop) cv.wait(lck);
+	cerr << "API interrupted !" << endl;
 	if(_closed) _web_client.close(websocket_close_status::going_away, "Manual close").wait();
-	cerr << "Connection closed !" << endl;
 }
 
 void DiscordAPI::connect(DiscordBot* bot, string token) {
@@ -262,7 +262,7 @@ http_response DiscordAPI::httpRequest(const method& method, string endpoint, jso
 
 void DiscordAPI::sendMessage(Message me, string channelId) {
 	json::value m = me.toJson();
-	string endpoint = "/channels/" + channelId + "/messages/";
+	string endpoint = "/channels/" + channelId + "/messages";
 	rateLimiter.ask(endpoint);
 	http_response r = httpRequest(methods::POST, endpoint, m);
 	statusCheck(r, status_codes::OK, "sendMessage");
@@ -270,9 +270,9 @@ void DiscordAPI::sendMessage(Message me, string channelId) {
 }
 
 void DiscordAPI::deleteMessage(string channelId, string messageId) {
-	string endpoint = "/channels/" + channelId + "/messages/";
+	string endpoint = "/channels/" + channelId + "/messages";
 	rateLimiter.ask(endpoint);
-	http_response r = httpRequest(methods::DEL, endpoint + messageId);
+	http_response r = httpRequest(methods::DEL, endpoint + "/" + messageId);
 	statusCheck(r, status_codes::NoContent, "deleteMessage");
 	rateLimiter.report(endpoint, r.headers());
 }
@@ -282,7 +282,7 @@ void DiscordAPI::bulkDeleteMessages(string channelId, vector<string>& messageIds
 	for(unsigned i = 0 ; i < messageIds.size() ; ++i)
 		arr[i] = json::value(messageIds[i]);
 	payload["messages"] = arr;
-	string endpoint = "/channels/" + channelId + "/messages/bulk-delete/";
+	string endpoint = "/channels/" + channelId + "/messages/bulk-delete";
 	rateLimiter.ask(endpoint);
 	http_response r = httpRequest(methods::POST, endpoint, payload);
 	statusCheck(r, status_codes::NoContent, "bulkDeleteMessage");
@@ -290,7 +290,7 @@ void DiscordAPI::bulkDeleteMessages(string channelId, vector<string>& messageIds
 }
 
 void DiscordAPI::addGuildMemberRole(string guildId, string userId, string roleId) {
-	string endpoint = "/guilds/" + guildId + "/members//roles/";
+	string endpoint = "/guilds/" + guildId + "/members//roles";
 	rateLimiter.ask(endpoint);
 	http_response r = httpRequest(methods::PUT, "/guilds/" + guildId + "/members/" + userId
 			+ "/roles/" + roleId);
@@ -299,7 +299,7 @@ void DiscordAPI::addGuildMemberRole(string guildId, string userId, string roleId
 }
 
 void DiscordAPI::removeGuildMemberRole(string guildId, string userId, string roleId) {
-	string endpoint = "/guilds/" + guildId + "/members//roles/";
+	string endpoint = "/guilds/" + guildId + "/members//roles";
 	rateLimiter.ask(endpoint);
 	http_response r = httpRequest(methods::DEL, "/guilds/" + guildId + "/members/" + userId
 			+ "/roles/" + roleId);
@@ -308,40 +308,40 @@ void DiscordAPI::removeGuildMemberRole(string guildId, string userId, string rol
 }
 
 void DiscordAPI::removeGuildMember(string guildId, string userId) {
-	string endpoint = "/guilds/" + guildId + "/members/";
+	string endpoint = "/guilds/" + guildId + "/members";
 	rateLimiter.ask(endpoint);
-	http_response r = httpRequest(methods::DEL, endpoint + userId);
+	http_response r = httpRequest(methods::DEL, endpoint + "/" + userId);
 	statusCheck(r, status_codes::NoContent, "removeGuildMember");
 	rateLimiter.report(endpoint, r.headers());
 }
 
 void DiscordAPI::createGuildBan(string guildId, string userId) {
-	string endpoint = "/guilds/" + guildId + "/bans/";
+	string endpoint = "/guilds/" + guildId + "/bans";
 	rateLimiter.ask(endpoint);
-	http_response r = httpRequest(methods::PUT, endpoint + userId);
+	http_response r = httpRequest(methods::PUT, endpoint + "/" + userId);
 	statusCheck(r, status_codes::NoContent, "createGuildBan");
 	rateLimiter.report(endpoint, r.headers());
 }
 
 void DiscordAPI::removeGuildBan(string guildId, string userId) {
-	string endpoint = "/guilds/" + guildId + "/bans/";
+	string endpoint = "/guilds/" + guildId + "/bans";
 	rateLimiter.ask(endpoint);
-	http_response r = httpRequest(methods::DEL, endpoint + userId);
+	http_response r = httpRequest(methods::DEL, endpoint + "/" + userId);
 	statusCheck(r, status_codes::NoContent, "removeGuildBan");
 	rateLimiter.report(endpoint, r.headers());
 }
 
 json::value DiscordAPI::getChannelMessage(string channelId, string messageId) {
-	string endpoint = "/channels/" + channelId + "/messages/";
+	string endpoint = "/channels/" + channelId + "/messages";
 	rateLimiter.ask(endpoint);
-	http_response r = httpRequest(methods::GET, endpoint + messageId);
+	http_response r = httpRequest(methods::GET, endpoint + "/" + messageId);
 	statusCheck(r, status_codes::OK, "");
 	rateLimiter.report(endpoint, r.headers());
 	return r.extract_json().get();
 }
 
 void DiscordAPI::triggerTyping(string channelId) {
-	string endpoint = "/channels/" + channelId + "/typing/";
+	string endpoint = "/channels/" + channelId + "/typing";
 	rateLimiter.ask(endpoint);
 	http_response r = httpRequest(methods::POST, endpoint);
 	statusCheck(r, status_codes::NoContent, "triggerTyping");
