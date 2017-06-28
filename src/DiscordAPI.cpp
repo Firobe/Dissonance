@@ -371,7 +371,7 @@ vector<DMChannel> DiscordAPI::getUserDMs() {
 
 DMChannel DiscordAPI::createDM(string recipientId) {
 	json::value payload;
-	payload["recipient"] = json::value(recipientId);
+	payload["recipient_id"] = json::value(recipientId);
 	string endpoint = "/users/@me/channels";
 	rateLimiter.ask(endpoint);
 	http_response r = httpRequest(methods::POST, endpoint, payload);
