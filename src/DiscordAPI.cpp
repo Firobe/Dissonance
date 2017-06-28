@@ -244,7 +244,7 @@ void DiscordAPI::sendJson(json::value v) {
 
 http_response DiscordAPI::httpRequest(const method& method, string endpoint, json::value body) {
 	http_request request(method);
-	request.set_request_uri(endpoint);
+	request.set_request_uri(U(endpoint));
 	request.headers().add("Authorization", "Bot " + _token);
 	request.headers().add("User-Agent", "DiscordBot (Sakamoto, 6.9)");
 	if(method != methods::GET) {
@@ -349,7 +349,7 @@ void DiscordAPI::triggerTyping(string channelId) {
 }
 
 vector<DMChannel> DiscordAPI::getUserDMs() {
-	string endpoint = "users/@me/channels";
+	string endpoint = "/users/@me/channels";
 	rateLimiter.ask(endpoint);
 	http_response r = httpRequest(methods::GET, endpoint);
 	statusCheck(r, status_codes::OK, "getUserDMs");
@@ -363,19 +363,19 @@ vector<DMChannel> DiscordAPI::getUserDMs() {
 DMChannel DiscordAPI::createDM(string recipientId) {
 	json::value payload;
 	payload["recipient"] = json::value(recipientId);
-	string endpoint = "users/@me/channels";
-	//rateLimiter.ask(endpoint);
+	string endpoint = "/users/@me/channels";
+	rateLimiter.ask(endpoint);
 	http_response r = httpRequest(methods::POST, endpoint, payload);
 	statusCheck(r, status_codes::OK, "createDM");
-	//rateLimiter.report(endpoint, r.headers());
+	rateLimiter.report(endpoint, r.headers());
 	return r.extract_json().get();
 }
 
 User DiscordAPI::getUser(string userId) {
-	string endpoint = "users";
-	//rateLimiter.ask(endpoint);
+	string endpoint = "/users";
+	rateLimiter.ask(endpoint);
 	http_response r = httpRequest(methods::GET, endpoint + "/" + userId);
 	statusCheck(r, status_codes::OK, "getUser");
-	//rateLimiter.report(endpoint, r.headers());
+	rateLimiter.report(endpoint, r.headers());
 	return r.extract_json().get();
 }
