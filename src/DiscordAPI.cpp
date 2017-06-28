@@ -364,10 +364,10 @@ DMChannel DiscordAPI::createDM(string recipientId) {
 	json::value payload;
 	payload["recipient"] = json::value(recipientId);
 	string endpoint = "users/@me/channels";
-	rateLimiter.ask(endpoint);
+	//rateLimiter.ask(endpoint);
 	http_response r = httpRequest(methods::POST, endpoint, payload);
 	statusCheck(r, status_codes::OK, "createDM");
-	rateLimiter.report(endpoint, r.headers());
+	//rateLimiter.report(endpoint, r.headers());
 	return r.extract_json().get();
 }
 
