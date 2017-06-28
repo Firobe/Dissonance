@@ -11,6 +11,8 @@
 
 #include "Message.hpp"
 #include "RateLimiter.hpp"
+#include "DMChannel.hpp"
+#include "User.hpp"
 
 using namespace utility;
 using namespace web;
@@ -61,7 +63,7 @@ private:
 public:
 	//Channel
     void sendMessage(Message content, std::string channel);
-	json::value getChannelMessage(std::string channelId, std::string messageId);
+	Message getChannelMessage(std::string channelId, std::string messageId);
 	void deleteMessage(std::string channelId, std::string messageId);
 	void bulkDeleteMessages(std::string channelId, std::vector<std::string>& messageIds);
 	void triggerTyping(std::string channelId);
@@ -71,6 +73,10 @@ public:
 	void removeGuildMember(std::string guildId, std::string userId);
 	void createGuildBan(std::string guildId, std::string userId);
 	void removeGuildBan(std::string guildId, std::string userId);
+	std::vector<DMChannel> getUserDMs();
+	DMChannel createDM(std::string);
+	User getUser(std::string);
+
     const json::value& getUser();
 	std::chrono::minutes upTime();
 };

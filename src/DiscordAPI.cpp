@@ -331,7 +331,7 @@ void DiscordAPI::removeGuildBan(string guildId, string userId) {
 	rateLimiter.report(endpoint, r.headers());
 }
 
-json::value DiscordAPI::getChannelMessage(string channelId, string messageId) {
+Message DiscordAPI::getChannelMessage(string channelId, string messageId) {
 	string endpoint = "/channels/" + channelId + "/messages";
 	rateLimiter.ask(endpoint);
 	http_response r = httpRequest(methods::GET, endpoint + "/" + messageId);
@@ -346,4 +346,36 @@ void DiscordAPI::triggerTyping(string channelId) {
 	http_response r = httpRequest(methods::POST, endpoint);
 	statusCheck(r, status_codes::NoContent, "triggerTyping");
 	rateLimiter.report(endpoint, r.headers());
+}
+
+vector<DMChannel> DiscordAPI::getUserDMs() {
+	string endpoint = "users/@me/channels";
+	rateLimiter.ask(endpoint);
+	http_response r = httpRequest(methods::GET, endpoint);
+	statusCheck(r, status_codes::OK, "getUserDMs");
+	rateLimiter.report(endpoint, r.headers());
+	vector<DMChannel> res;
+	for(json::value& v : r.extract_json().get().as_array())
+		res.emplace_back(v);
+	return res;
+}
+
+DMChannel DiscordAPI::createDM(string recipientId) {
+	json::value payload;
+	payload["recipient"] = json::value(recipientId);
+	string endpoint = "users/@me/channels";
+	rateLimiter.ask(endpoint);
+	http_response r = httpRequest(methods::POST, endpoint, payload);
+	statusCheck(r, status_codes::OK, "createDM");
+	rateLimiter.report(endpoint, r.headers());
+	return r.extract_json().get();
+}
+
+User DiscordAPI::getUser(string userId) {
+	string endpoint = "users";
+	rateLimiter.ask(endpoint);
+	http_response r = httpRequest(methods::GET, endpoint + "/" + userId);
+	statusCheck(r, status_codes::OK, "getUser");
+	rateLimiter.report(endpoint, r.headers());
+	return r.extract_json().get();
 }
