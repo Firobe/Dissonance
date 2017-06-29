@@ -80,6 +80,7 @@ Field::Field(string name, string value, bool Inline) :
 
 json::value Field::toJson() {
 	json::value r;
+	if(value.empty()) value = "[NO TEXT IN MESSAGE]";
 	r["name"] = json::value(name);
 	r["value"] = json::value(value);
 	r["inline"] = json::value(Inline);
