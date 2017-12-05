@@ -1,4 +1,6 @@
 #include <condition_variable>
+#include <iomanip>
+#include <ctime>
 
 #include "DiscordAPI.hpp"
 
@@ -43,7 +45,10 @@ void DiscordAPI::connect(DiscordBot* bot, string token) {
 	_resuming = (_bot != nullptr);
 	_bot = bot;
 	_token = token;
+	auto t = std::time(nullptr);
+	auto tm = *std::localtime(&t);
 	cout << "DISSONANCE\n============================================" << endl;
+	cout << "Current time : " << std::put_time(&tm, "%d/%m/%Y %H:%M:%S") << endl;
 	//GET endpoint
 	http_response endResp = statusCheck(
 			httpRequest(methods::GET, "/gateway"),
