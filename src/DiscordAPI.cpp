@@ -53,7 +53,7 @@ void DiscordAPI::connect(DiscordBot* bot, string token) {
 	cout << "Gateway endpoint : " << _wsEndpoint << endl;
 	//Connection
 	uri_builder builder(_wsEndpoint);
-	builder.append_query("v", 5);
+	builder.append_query("v", 6);
 	builder.append_query("encoding", "json");
 	_web_client.set_message_handler(bind(&DiscordAPI::receiveAndDispatch, this, placeholders::_1));
 
