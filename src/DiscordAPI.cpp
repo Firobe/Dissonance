@@ -113,10 +113,6 @@ void DiscordAPI::readyHandler(json::value& ready){
 }
 
 void DiscordAPI::finalHandler() {
-	cout << "Okay !\nSending presence message...";
-	//json::value payload = json::value::parse("{\"game\":{\"name\":\"dormir...\"},\"idle_since\":null}");
-	//sendJson(gatewayPayload(payload, 3));
-
 	cout << "Success !\n============================================" << endl;
 	_keepAliveTask = thread(&DiscordAPI::keepAlive, this);
 	cout << "Now listening..." << endl;
