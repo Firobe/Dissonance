@@ -214,7 +214,8 @@ void DiscordAPI::eventDispatcher(string name, json::value event) {
 			_bot->onGuildBanRemove(event["guild_id"].as_string(), event["user"]);
 	}
 	catch(exception& e) {
-		cout << "Exception while processing event (" << name << ") : " << e.what() << endl;
+		cerr << "Exception while processing event (" << name << ") : " << e.what() << endl;
+		cerr << "Event was : " << event << endl;
 		//throw e;
 	}
 }
