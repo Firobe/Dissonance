@@ -22,6 +22,7 @@ void DiscordBot::start(const std::string& token) {
 		catch (const exception &e) {
 			cerr << "ERREUR GRAVE : " << e.what() << endl;
 		}
+
 		if(time(nullptr) - lastRetry < 20) {
 			cerr << "Retrials are too close !! COMPLETELY EXITING !!" << endl;
 			return;
