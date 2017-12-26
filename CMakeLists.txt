@@ -15,7 +15,6 @@ add_library(dissonance SHARED
 	src/GuildMember.cpp
 	src/Guild.cpp
 	src/RateLimiter.cpp
-	src/DMChannel.cpp
 	)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}")
@@ -50,7 +49,6 @@ install(FILES
 	src/GuildMember.hpp
 	src/Guild.hpp
 	src/RateLimiter.hpp
-	src/DMChannel.hpp
 	DESTINATION /usr/include/dissonance/
 	)
 install(FILES src/Dissonance.hpp

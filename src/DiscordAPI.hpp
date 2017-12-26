@@ -11,7 +11,7 @@
 
 #include "Message.hpp"
 #include "RateLimiter.hpp"
-#include "DMChannel.hpp"
+#include "Channel.hpp"
 #include "User.hpp"
 
 using namespace utility;
@@ -73,8 +73,8 @@ public:
 	void removeGuildMember(std::string guildId, std::string userId);
 	void createGuildBan(std::string guildId, std::string userId);
 	void removeGuildBan(std::string guildId, std::string userId);
-	std::vector<DMChannel> getUserDMs();
-	DMChannel createDM(std::string);
+	std::vector<Channel> getUserDMs();
+	Channel createDM(std::string);
 	User getUser(std::string);
 
     User getUser();

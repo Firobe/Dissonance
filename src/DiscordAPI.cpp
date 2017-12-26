@@ -355,13 +355,13 @@ void DiscordAPI::triggerTyping(string channelId) {
 	rateLimiter.report(endpoint, r.headers());
 }
 
-vector<DMChannel> DiscordAPI::getUserDMs() {
+vector<Channel> DiscordAPI::getUserDMs() {
 	string endpoint = "/users/@me/channels";
 	rateLimiter.ask(endpoint);
 	http_response r = httpRequest(methods::GET, endpoint);
 	statusCheck(r, status_codes::OK, "getUserDMs");
 	rateLimiter.report(endpoint, r.headers());
-	vector<DMChannel> res;
+	vector<Channel> res;
 	json::value v = r.extract_json().get();
 	if(!v.is_array())
 		throw runtime_error("getUserDMs : returned is not an array !");
@@ -370,7 +370,7 @@ vector<DMChannel> DiscordAPI::getUserDMs() {
 	return res;
 }
 
-DMChannel DiscordAPI::createDM(string recipientId) {
+Channel DiscordAPI::createDM(string recipientId) {
 	json::value payload;
 	payload["recipient_id"] = json::value(recipientId);
 	string endpoint = "/users/@me/channels";
