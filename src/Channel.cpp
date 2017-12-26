@@ -10,5 +10,6 @@ Channel::Channel(json::value v) {
 	RETRIEVE(v, position, integer);
 	RETRIEVE(v, guild_id, string);
 	RETRIEVE(v, last_message_id, string);
+    RETRIEVE_ARRAY(v, recipients);
 }
 

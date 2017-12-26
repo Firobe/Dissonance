@@ -9,4 +9,8 @@
 	if(from.has_field(#name) and from[#name].is_boolean()) \
 		name = from[#name].as_bool();
 
+#define RETRIEVE_ARRAY(from, name) \
+    if(from.has_field(#name) and v[#name].is_array()) \
+		for(json::value& j : from[#name].as_array()) \
+			name.emplace_back(j);
 #endif

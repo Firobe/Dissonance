@@ -19,15 +19,9 @@ Message::Message(json::value v) {
 	RETRIEVE(v, channel_id, string);
 	RETRIEVE(v, content, string);
 	RETRIEVE(v, timestamp, string);
-
 	if(v.has_field("author"))
 		author = v["author"];
-
+    RETRIEVE_ARRAY(v, mentions);
+    RETRIEVE_ARRAY(v, mention_roles);
 	//TODO embed parsing
-	if(v.has_field("mentions"))
-		for(json::value& j : v["mentions"].as_array())
-			mentions.emplace_back(j);
-	if(v.has_field("mention_roles"))
-		for(json::value& j : v["mention_roles"].as_array())
-			mention_roles.emplace_back(j);
 }

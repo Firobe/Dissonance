@@ -23,14 +23,7 @@ Guild::Guild(json::value v)
 	RETRIEVE_BOOL(v, large);
 	RETRIEVE_BOOL(v, unavailable);
 	RETRIEVE(v, member_count, integer);
-
-	if(v.has_field("roles") and v["roles"].is_array())
-		for(json::value& j : v["roles"].as_array())
-			roles.emplace_back(j);
-	if(v.has_field("members") and v["members"].is_array())
-		for(json::value& j : v["members"].as_array())
-			members.emplace_back(j);
-	if(v.has_field("channels") and v["channels"].is_array())
-		for(json::value& j : v["channels"].as_array())
-			channels.emplace_back(j);
+    RETRIEVE_ARRAY(v, roles);
+    RETRIEVE_ARRAY(v, members);
+    RETRIEVE_ARRAY(v, channels);
 }

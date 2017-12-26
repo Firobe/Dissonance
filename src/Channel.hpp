@@ -4,6 +4,8 @@
 #include <string>
 #include <cpprest/json.h>
 
+#include "User.hpp"
+
 using namespace web;
 
 struct Channel {
@@ -13,6 +15,7 @@ struct Channel {
 	int type;
 	int position;
 	std::string last_message_id;
+    std::vector<User> recipients;
 
 	Channel() = default;
 	Channel(json::value);
