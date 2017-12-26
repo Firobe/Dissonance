@@ -4,6 +4,7 @@
 using namespace std;
 
 Channel::Channel(json::value v) {
+    name = "DM";
 	RETRIEVE(v, id, string);
 	RETRIEVE(v, name, string);
 	RETRIEVE(v, type, integer);
