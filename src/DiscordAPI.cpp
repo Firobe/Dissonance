@@ -345,7 +345,9 @@ Message DiscordAPI::getChannelMessage(string channelId, string messageId) {
 	http_response r = httpRequest(methods::GET, endpoint + "/" + messageId);
 	statusCheck(r, status_codes::OK, "");
 	rateLimiter.report(endpoint, r.headers());
-	return r.extract_json().get();
+    json::value j = r.extract_json().get();
+    cout << j << endl;
+	return j;
 }
 
 void DiscordAPI::triggerTyping(string channelId) {
