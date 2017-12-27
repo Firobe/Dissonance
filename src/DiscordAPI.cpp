@@ -346,7 +346,6 @@ Message DiscordAPI::getChannelMessage(string channelId, string messageId) {
 	statusCheck(r, status_codes::OK, "");
 	rateLimiter.report(endpoint, r.headers());
     json::value j = r.extract_json().get();
-    cout << j << endl;
 	return j;
 }
 
