@@ -161,6 +161,9 @@ void DiscordAPI::receiveAndDispatch(const websocket_incoming_message& msg) {
 					_dead = false;
 					break;
 
+				case 9:
+					throw runtime_error("Invalid session");
+
 				default:
 					cout << "Received unprocessed message " << received.serialize() << endl;
 					cout << "OP was " << received["op"].as_integer() << endl;
